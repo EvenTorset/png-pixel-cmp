@@ -1,37 +1,46 @@
-# @cccode/png-pixel-cmp
+# png-pixel-cmp
 
-A pure TypeScript library designed for comparing PNG files by decoded pixel value while ignoring encoding differences like compression level, filter choice, bit depth, and color type. Built for small pixel-art sprites (roughly 16x16 to 128x128) as a browser-native replacement for canvas-based pixel comparisons.
+Compares two PNGs by decoded pixel values, ignoring encoding-only differences.
 
-It relies on the web standard `DecompressionStream` API using the `deflate` format.
+Two files that encode the same image are reported as identical even when their
+bytes differ, so compression level, scanline filters, palette ordering, bit
+depth and colour type are all ignored. Only the resulting RGBA pixels matter.
 
-## Supported Formats
+## Rust
 
-* Grayscale: 1, 2, 4, 8-bit (with `tRNS` support)
-* Grayscale + alpha: 8-bit
-* RGB: 8-bit (with `tRNS` support)
-* RGBA: 8-bit
-* Indexed color: 1, 2, 4, 8-bit (with `PLTE` and `tRNS` support)
-
-16-bit depths and Adam7 interlacing are currently not supported.
-
-## Usage
-
-```ts
-import { comparePngPixels, PngCompareError } from '@cccode/png-pixel-cmp'
-
-try {
-  const isIdentical = await comparePngPixels(bytesA, bytesB)
-  console.log(isIdentical ? 'Pixels match' : 'Pixels differ')
-} catch (e) {
-  if (e instanceof PngCompareError) {
-    console.error(`Comparison failed: ${e.message}`)
-  }
-}
-
+```toml
+[dependencies]
+png-pixel-cmp = { git = "https://github.com/EvenTorset/png-pixel-cmp.git" }
 ```
 
-### Return Values
+```rust
+use png_pixel_cmp::compare_png_pixels;
 
-* **`true`**: The pixel data in both PNGs is identical.
-* **`false`**: The pixel data is not identical, or the image dimensions do not match.
-* **Throws `PngCompareError`**: Either PNG file is invalid, corrupted, or uses unsupported features.
+let same = compare_png_pixels(&a, &b)?;
+```
+
+`compare_png_pixels` returns `Result<bool, PngCompareError>`. Images with
+different dimensions are `Ok(false)` rather than an error; only unreadable data
+produces an error, and `PngCompareError::kind` says which of the thirteen
+failure modes it was.
+
+## JavaScript
+
+```js
+import { comparePngPixels } from '@cccode/png-pixel-cmp'
+
+const same = await comparePngPixels(a, b)
+```
+
+## Supported formats
+
+| Colour type | Bit depths |
+|---|---|
+| Greyscale | 1, 2, 4, 8 |
+| Greyscale + alpha | 8 |
+| Truecolour | 8 |
+| Truecolour + alpha | 8 |
+| Indexed | 1, 2, 4, 8 |
+
+`tRNS` is honoured for all three of indexed, greyscale and truecolour. 16-bit
+depths and interlaced images report `UnsupportedFormat`.

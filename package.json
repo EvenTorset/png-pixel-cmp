@@ -1,23 +1,18 @@
 {
   "name": "@cccode/png-pixel-cmp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Compares two PNGs by decoded pixel values, ignoring encoding-only differences.",
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./js/index.js",
+  "types": "./js/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./js/index.d.ts",
+      "import": "./js/index.js"
     }
   },
-  "files": ["dist"],
+  "files": ["js", "pkg"],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc --noEmit"
-  },
-  "devDependencies": {
-    "typescript": "^7.0.0",
-    "@types/node": "^24.0.0"
+    "build": "wasm-pack build --target web --release --features wasm"
   }
 }

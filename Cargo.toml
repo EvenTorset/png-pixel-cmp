@@ -1,0 +1,26 @@
+[package]
+name = "png-pixel-cmp"
+version = "0.2.0"
+edition = "2021"
+description = "Compares two PNGs by decoded pixel values, ignoring encoding-only differences."
+license = "MIT"
+repository = "https://github.com/EvenTorset/png-pixel-cmp"
+categories = ["multimedia::images", "wasm"]
+keywords = ["png", "compare", "diff", "pixels"]
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+zune-inflate = { version = "0.2", default-features = false, features = ["zlib"] }
+wasm-bindgen = { version = "0.2", optional = true }
+js-sys = { version = "0.3", optional = true }
+
+[features]
+default = []
+wasm = ["dep:wasm-bindgen", "dep:js-sys"]
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
