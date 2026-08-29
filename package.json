@@ -16,6 +16,7 @@
     "pkg"
   ],
   "scripts": {
-    "build": "wasm-pack build --target web --release --features wasm && cmd /c del pkg\\.gitignore"
+    "build": "wasm-pack build --target web --release --features wasm && cmd /c del pkg\\.gitignore",
+    "test": "node --test"
   }
 }
