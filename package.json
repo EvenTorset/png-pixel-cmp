@@ -1,6 +1,6 @@
 {
   "name": "@cccode/png-pixel-cmp",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Compares two PNGs by decoded pixel values, ignoring encoding-only differences.",
   "type": "module",
   "main": "./js/index.js",
@@ -11,8 +11,11 @@
       "import": "./js/index.js"
     }
   },
-  "files": ["js", "pkg"],
+  "files": [
+    "js",
+    "pkg"
+  ],
   "scripts": {
-    "build": "wasm-pack build --target web --release --features wasm"
+    "build": "wasm-pack build --target web --release --features wasm && cmd /c del pkg\\.gitignore"
   }
 }
